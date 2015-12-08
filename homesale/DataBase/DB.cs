@@ -103,6 +103,13 @@ namespace homesale.DataBase
             return this;
         }
 
+        public T QueryDo<T>(string QueryString)
+        {
+            SqlCommand sc = this.Connection.CreateCommand();
+            sc.CommandText = QueryString;
+            return (T) sc.ExecuteScalar();
+        }
+
 
         public DB Insert(string TableName, string[] Fields, object[] Values)
         {
@@ -143,6 +150,37 @@ namespace homesale.DataBase
         static public string Str(string Source)
         {
             return Source.Replace("'", "\'");
+        }
+
+        public static bool IsNumericType(object o)
+        {
+            switch (Type.GetTypeCode(o.GetType()))
+            {
+                case TypeCode.Byte:
+                case TypeCode.SByte:
+                case TypeCode.UInt16:
+                case TypeCode.UInt32:
+                case TypeCode.UInt64:
+                case TypeCode.Int16:
+                case TypeCode.Int32:
+                case TypeCode.Int64:
+                case TypeCode.Decimal:
+                case TypeCode.Double:
+                case TypeCode.Single:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        static public string val(dynamic Value)
+        {
+            var val = (string) Value.ToString();
+
+            if (Value.GetType() == typeof(string)) val = String.Format("'{0}'", val.Replace("'", "\'"));
+            if (IsNumericType(Value)) val = val.Replace(",", ".");
+
+            return val;
         }
 
 

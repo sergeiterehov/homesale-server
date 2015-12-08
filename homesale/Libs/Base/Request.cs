@@ -1,4 +1,4 @@
-﻿using System.Xml;
+﻿using System.Xml.Linq;
 
 namespace homesale.Libs.Base
 {
@@ -10,7 +10,7 @@ namespace homesale.Libs.Base
         {
             this.Response = new Response();
 
-            this.Init(homesale.App.Main.ME().Query.XML);
+            this.Init(App.Main.ME().Query.XML);
         }
 
         public T THIS
@@ -21,15 +21,16 @@ namespace homesale.Libs.Base
             }
         }
 
-        private T Init(XmlReader XML)
+        private T Init(XDocument XML)
         {
-            XML.ReadToFollowing("data");
+            var data = XML.Element(XName.Get("call"));
 
-            foreach (System.Reflection.FieldInfo Field in this.GetType().GetFields())
+            foreach (var Field in this.GetType().GetFields())
             {
-                if(Field.DeclaringType == this.GetType() && XML.ReadToFollowing(Field.Name.ToLower()))
+                var xfield = XML.Element(XName.Get(Field.Name.ToLower()));
+                if (Field.DeclaringType == this.GetType() && xfield != null)
                 {
-                    object value = XML.ReadElementContentAs(Field.FieldType, null);
+                    object value = System.Convert.ChangeType(xfield.Value, Field.FieldType); ;
                     Field.SetValue(this, value);
                 }
             }

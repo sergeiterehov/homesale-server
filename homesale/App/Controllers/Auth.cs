@@ -12,7 +12,7 @@ namespace homesale.App.Controllers
 
             Request.passwd = Hash.MD5(Request.passwd + "__SALT_123");
 
-            var agent = Agent.By((selector) => { return selector.
+            var agent = Models.Agent.By((selector) => { return selector.
                 where("login", "=", Request.login)
                 .where("passwd", "=", Request.passwd)
             ; }).Get();
@@ -22,7 +22,7 @@ namespace homesale.App.Controllers
                 result = new XML("success").append(
                     new XML("token").xml(Hash.MD5(agent.passwd + "__SALT_321"))
                 ).append(
-                    new XML("id").xml(agent.id)
+                    new XML("token-id").xml(agent.id)
                 );
             }
             else
@@ -33,9 +33,47 @@ namespace homesale.App.Controllers
             return Request.Response.Write(result);
         }
 
-        public bool Check()
+        static private Models.Agent _agent = null;
+
+        static public Models.Agent Agent
         {
-            return true; // TODO
+            get
+            {
+                return _agent;
+            }
+        }
+
+        static public void AuthToken()
+        {
+            if (Request.has("token") && Request.has("token-id"))
+            {
+                var token = Request.input<string>("token");
+                var id = Request.input<long>("token-id");
+
+                var agent = Models.Agent.Find(id);
+
+                if(agent != null && token == Hash.MD5(agent.passwd + "__SALT_321"))
+                {
+                    _agent = agent;
+                }
+                else
+                {
+                    _agent = null;
+                }
+            }
+        }
+
+        static public bool Check
+        {
+            get
+            {
+                return _agent != null;
+            }
+        }
+
+        static public void Die()
+        {
+            if (!Check) Main.Abort(1, "Требуется аутентификация!");
         }
     }
 }

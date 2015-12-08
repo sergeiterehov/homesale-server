@@ -10,11 +10,18 @@ namespace homesale
 {
     class Response
     {
-        private MemoryStream Memmory;
+        private MemoryStream Memmory = new MemoryStream();
 
         public Response()
         {
-            this.Memmory = new MemoryStream();
+            
+        }
+        public Response(params dynamic[] Objects)
+        {
+            foreach (dynamic obj in Objects)
+            {
+                this.Write(obj.ToString());
+            }
         }
 
         public Response Write(byte[] Buffer)

@@ -92,7 +92,7 @@ namespace homesale
             }
             else
             {
-                Response Response = App.Main.ME().Init(Query).Router();
+                Response Response = App.Main.ME().Init(Query).Begin();
                 if (null != Response)
                 {
                     Query.Write(Response.GetBytes());

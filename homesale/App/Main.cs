@@ -1,25 +1,39 @@
-﻿using homesale.App.Controllers;
+﻿using System;
+using homesale.App.Controllers;
 
 namespace homesale.App
 {
-    class Main : Libs.Base.App
+    class Main : Libs.Base.Application<Main>
     {
-        protected static dynamic _instance = null;
-        public static dynamic ME() { return _instance = _instance ?? new Main(); }
-
-        public Response Router() // TODO - вынести в отдельный класс >> Route("Auth", Auth) >> Route("Auth", Auth, "LoginMe", "Login")
+        public override Response Begin()
         {
-            switch (this.Query.CallClass)
+            try
             {
-                case "Auth":
-                    switch (this.Query.CallMethod)
-                    {
-                        case "Login":
-                            return new Auth().Login(new Requests.Auth.Login());
-                    }
-                    break;
+                Auth.AuthToken();
+
+                Response result = Router.Route(this.Query.CallClass, this.Query.CallMethod, this.Query);
+
+                if (result == null) Main.Abort("Не найден \""+ this.Query.CallClass + "." + this.Query.CallMethod +"\"!");
+
+                return result;
+
             }
-            return null;
+            catch (ExceptionAbort ex)
+            {
+                return new Response(new XML("error").append(
+                    XML.Get("code", ex.Code)
+                ).append(
+                    XML.Get("message", ex.Message)
+                ));
+            }
+            catch (Exception ex)
+            {
+                return new Response(new XML("error").append(
+                    XML.Get("code", -1)
+                ).append(
+                    XML.Get("message", ex.Message)
+                ));
+            }
         }
     }
 }

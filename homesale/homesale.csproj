@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App\Controllers\Agent.cs" />
     <Compile Include="App\Controllers\Auth.cs" />
     <Compile Include="App\Controllers\Controller.cs" />
     <Compile Include="App\Main.cs" />
@@ -54,8 +55,10 @@
     <Compile Include="App\Requests\Auth\Check.cs" />
     <Compile Include="App\Requests\Auth\Login.cs" />
     <Compile Include="App\Requests\Request.cs" />
+    <Compile Include="App\Router.cs" />
+    <Compile Include="Kernel\Request.cs" />
     <Compile Include="Kernel\XML.cs" />
-    <Compile Include="Libs\Base\App.cs" />
+    <Compile Include="Libs\Base\Application.cs" />
     <Compile Include="Libs\Cryptography\Hash.cs" />
     <Compile Include="DataBase\DB.cs" />
     <Compile Include="DataBase\Model.cs" />
@@ -64,6 +67,9 @@
     <Compile Include="Libs\Log.cs" />
     <Compile Include="Libs\Base\Request.cs" />
     <Compile Include="Libs\HSP\Server.cs" />
+    <Compile Include="Libs\ORM\Collection.cs" />
+    <Compile Include="Libs\ORM\Delete.cs" />
+    <Compile Include="Libs\ORM\Insert.cs" />
     <Compile Include="Libs\ORM\Model.cs" />
     <Compile Include="Libs\ORM\Raw.cs" />
     <Compile Include="Libs\ORM\Select.cs" />

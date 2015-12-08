@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Net;
 using System.Net.Sockets;
 using System.Text.RegularExpressions;
-using System.Xml;
+using System.Xml.Linq;
 using System.IO;
 
 namespace homesale.Libs.HSP
@@ -19,7 +19,7 @@ namespace homesale.Libs.HSP
         public string Method, URL, Version, Body;
         public List<string> Headers;
 
-        public XmlReader XML;
+        public XDocument XML;
 
         public string CallClass, CallMethod;
 
@@ -56,17 +56,15 @@ namespace homesale.Libs.HSP
 
             try
             {
-                this.XML = XmlReader.Create(new StringReader(this.Body));
+                this.XML = XDocument.Parse(this.Body);
+                
 
-                XML.ReadToFollowing("call");
-                XML.MoveToAttribute("class");
-                this.CallClass = XML.Value;
-                XML.MoveToAttribute("method");
-                this.CallMethod = XML.Value;
+                this.CallClass = XML.Element(XName.Get("call")).Attribute(XName.Get("class")).Value;
+                this.CallMethod = XML.Element(XName.Get("call")).Attribute(XName.Get("method")).Value;
             }
-            catch
+            catch(Exception ex)
             {
-
+                throw new Exception("Ошибка в формате запроса. " + ex.Message);
             }
         }
 

@@ -67,5 +67,14 @@ namespace homesale
                 return String.Format("<{0}{1}>{2}</{0}>", this._name, attrs, this._xml);
             }
         }
+
+        public static XML Get(string Name, dynamic Inner)
+        {
+            return new XML(Name).xml(Inner);
+        }
+        public static XML Get(string Name)
+        {
+            return new XML(Name);
+        }
     }
 }
