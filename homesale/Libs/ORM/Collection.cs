@@ -5,6 +5,7 @@ namespace homesale.Libs.ORM
 {
     class Collection<ModelType> where ModelType : Model<ModelType>, new()
     {
+        private Select selector;
         private List<ModelType> list = new List<ModelType>();
 
         public Collection()
@@ -13,7 +14,7 @@ namespace homesale.Libs.ORM
         }
         public Collection(Select SelectQuery)
         {
-            this.Add(SelectQuery);
+            this.selector = SelectQuery;
         }
         public Collection(System.Data.DataTable Table)
         {
@@ -25,16 +26,15 @@ namespace homesale.Libs.ORM
             return Model<ModelType>.GetTableName();
         }
 
-        public Collection<ModelType> Select(Func<Select, Select> SelectFunction)
+        public Collection<ModelType> Get()
         {
-            var select = SelectFunction(new Select(GetTableName()));
-            this.Add(select);
+            if(this.selector != null) this.Add(this.selector);
             return this;
         }
 
-        public Collection<ModelType> All()
+        public Collection<ModelType> Select(Func<Select, Select> SelectFunction)
         {
-            this.Add(new Select(GetTableName()));
+            this.selector = SelectFunction(new Select(GetTableName()));
             return this;
         }
 

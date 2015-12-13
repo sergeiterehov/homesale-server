@@ -6,31 +6,26 @@ namespace homesale.App.Controllers
 {
     class Auth : Controller
     {
-        public Response Login(Requests.Auth.Login Request)
+        public XML Login(Requests.Auth.Login request)
         {
-            XML result;
-
-            Request.passwd = Hash.MD5(Request.passwd + "__SALT_123");
+            request.passwd = Hash.MD5(request.passwd + "__SALT_123");
 
             var agent = Models.Agent.By((selector) => { return selector.
-                where("login", "=", Request.login)
-                .where("passwd", "=", Request.passwd)
+                where("login", "=", request.login)
+                .where("passwd", "=", request.passwd)
             ; }).Get();
 
             if (agent != null)
             {
-                result = new XML("success").append(
-                    new XML("token").xml(Hash.MD5(agent.passwd + "__SALT_321"))
-                ).append(
-                    new XML("token-id").xml(agent.id)
-                );
+                return new XML()
+                .add("token", Hash.MD5(agent.passwd + "__SALT_321"))
+                .add("tokenId", agent.id)
+                ;
             }
             else
             {
-                result = new XML("error").xml("User not found!");
+                throw Main.Abort("Не верно введен логин или пароль!");
             }
-
-            return Request.Response.Write(result);
         }
 
         static private Models.Agent _agent = null;
@@ -45,10 +40,10 @@ namespace homesale.App.Controllers
 
         static public void AuthToken()
         {
-            if (Request.has("token") && Request.has("token-id"))
+            if (Request.has("token") && Request.has("tokenId"))
             {
                 var token = Request.input<string>("token");
-                var id = Request.input<long>("token-id");
+                var id = Request.input<long>("tokenId");
 
                 var agent = Models.Agent.Find(id);
 
@@ -73,7 +68,7 @@ namespace homesale.App.Controllers
 
         static public void Die()
         {
-            if (!Check) Main.Abort(1, "Требуется аутентификация!");
+            if (!Check) throw Main.Abort(1, "Требуется аутентификация!");
         }
     }
 }

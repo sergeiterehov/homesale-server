@@ -25,25 +25,25 @@ namespace homesale.Libs.Base
             }
         }
 
-        static public void Abort()
+        static public ExceptionAbort Abort()
         {
-            throw new ExceptionAbort();
+            return new ExceptionAbort();
         }
-        static public void Abort(string Message)
+        static public ExceptionAbort Abort(string Message)
         {
-            throw new ExceptionAbort(0, Message);
+            return new ExceptionAbort(0, Message);
         }
-        static public void Abort(int Code)
+        static public ExceptionAbort Abort(int Code)
         {
-            throw new ExceptionAbort(Code, "");
+            return new ExceptionAbort(Code, "");
         }
-        static public void Abort(int Code, string Message)
+        static public ExceptionAbort Abort(int Code, string Message)
         {
-            throw new ExceptionAbort(Code, Message);
+            return new ExceptionAbort(Code, Message);
         }
-        static public void Abort(string Message, int Code)
+        static public ExceptionAbort Abort(string Message, int Code)
         {
-            throw new ExceptionAbort(Code, Message);
+            return new ExceptionAbort(Code, Message);
         }
 
         public class ExceptionAbort : System.Exception

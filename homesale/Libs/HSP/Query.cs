@@ -16,8 +16,7 @@ namespace homesale.Libs.HSP
         private TcpClient Me;
         private NetworkStream Stream;
 
-        public string Method, URL, Version, Body;
-        public List<string> Headers;
+        public string Body;
 
         public XDocument XML;
 
@@ -42,17 +41,7 @@ namespace homesale.Libs.HSP
                 }
             }
 
-            Match ReqMatch = Regex.Match(Request, @"^(?<method>\w*)\s(?<url>\S*)\sHTTP\/(?<version>\S*)\r\n(?<headers>.*)\r\n\r\n(?<body>.*)$", RegexOptions.Singleline);
-
-            this.Headers = new List<string>();
-            foreach (Capture cap in Regex.Match(ReqMatch.Groups[4].Value, @"^((?<header>.*)\r\n)*").Groups[1].Captures)
-            {
-                this.Headers.Add(cap.Value);
-            }
-            this.Method = ReqMatch.Groups[1].Value;
-            this.URL = ReqMatch.Groups[2].Value;
-            this.Version = ReqMatch.Groups[3].Value;
-            this.Body = ReqMatch.Groups[5].Value;
+            this.Body = Request;
 
             try
             {

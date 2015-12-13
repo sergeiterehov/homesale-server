@@ -13,10 +13,25 @@ namespace homesale
         private string _name;
         private bool _closed;
 
+        public XML(bool Closed = false)
+        {
+            this._closed = Closed;
+        }
+
         public XML(string Name, bool Closed = false)
         {
             this._name = Name;
             this._closed = Closed;
+        }
+
+        public string name()
+        {
+            return this._name;
+        }
+        public XML name(string Name)
+        {
+            this._name = Name;
+            return this;
         }
 
         public XML attr(string Attribute, dynamic Value)
@@ -44,6 +59,18 @@ namespace homesale
             this._xml += Inner.ToString();
             return this;
         }
+        public XML append(string Name, dynamic Inner)
+        {
+            this._xml += XML.Get(Name, Inner.ToString());
+            return this;
+        }
+
+        public XML add(string Name, dynamic Inner)
+        {
+            this.append(Name, Inner);
+            return this;
+        }
+
         public XML appendTo(XML Parent)
         {
             Parent.append(this);

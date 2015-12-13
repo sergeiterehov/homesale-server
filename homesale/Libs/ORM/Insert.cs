@@ -101,9 +101,10 @@ namespace homesale.Libs.ORM
                 string value = field.ToString();
                 if (field.GetType() == typeof(string)) value = String.Format("'{0}'", value);
                 raw += String.Format("{0}", value);
-
-                this.value(new Raw(raw));
             }
+            raw = String.Format("({0})", raw);
+            this.value(new Raw(raw));
+
             return this;
         }
 

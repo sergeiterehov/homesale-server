@@ -1,33 +1,24 @@
-﻿using System;
-
+﻿
+using System;
 using homesale.App.Controllers;
-using homesale.App.Requests;
 
 namespace homesale.App
 {
-    static class Router
+    class Router : Libs.Base.Router
     {
-        public static Response Route(string Class, string Method, Libs.HSP.Query Query)
+        override protected void Before()
         {
-            switch (Class)
+            switch (CallMethod)
             {
-                case "Auth":
-                    switch (Method)
-                    {
-                        case "Login":
-                            return new Auth().Login(new Requests.Auth.Login());
-                    }
-                    break;
-                case "Agent":
-                    switch (Method)
-                    {
-                        case "Me": Auth.Die();
-                            return new Agent().Me();
-                    }
-                    break;
+                case "Auth.Login": return;
             }
-            
-            return null;
+
+            Auth.Die();
+        }
+
+        protected override XML After(XML Result)
+        {
+            return Result;
         }
     }
 }

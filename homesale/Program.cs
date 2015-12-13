@@ -72,7 +72,7 @@ namespace homesale
         static void InitDataBase()
         {
             DataBase = DB.ME();
-            DataBase.Connect("VM-WIN8X64", "realtor", "application", "12345");
+            DataBase.Connect("VM-WIN8X64", "realtor", "application", "12345"); //VM-WIN8X64
         }
 
         static void InitInterface()
@@ -82,21 +82,12 @@ namespace homesale
 
         static public void Query(Query Query)
         {
-            Log.Write("QUERY:" + Query.URL);
+            Log.Write("QUERY:" + Query.XML);
 
-            Query.Write(Encoding.ASCII.GetBytes("HTTP/1.1 200 OK\r\nContent-Type:text/html; charset=utf-8\r\n\r\n"));
-
-            if(Query.URL == "/index")
+            Response Response = App.Main.ME().Init(Query).Begin();
+            if (null != Response)
             {
-                Query.Write(System.IO.File.ReadAllBytes("X:\\SHARE\\SOURCE\\HTML\\ajaxtest\\homesale.html"));
-            }
-            else
-            {
-                Response Response = App.Main.ME().Init(Query).Begin();
-                if (null != Response)
-                {
-                    Query.Write(Response.GetBytes());
-                }
+                Query.Write(Response.GetBytes());
             }
         }
     }

@@ -177,8 +177,9 @@ namespace homesale.DataBase
         {
             var val = (string) Value.ToString();
 
-            if (Value.GetType() == typeof(string)) val = String.Format("'{0}'", val.Replace("'", "\'"));
-            if (IsNumericType(Value)) val = val.Replace(",", ".");
+            if (Value is string) val = String.Format("'{0}'", val.Replace("'", "\'"));
+            else if (IsNumericType(Value)) val = val.Replace(",", ".");
+            else if (Value is DateTime) val = ((DateTime)Value).ToString("yyyyMMdd H:mm:ss");
 
             return val;
         }

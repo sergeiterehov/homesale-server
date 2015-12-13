@@ -11,11 +11,16 @@ namespace homesale.App
             {
                 Auth.AuthToken();
 
-                Response result = Router.Route(this.Query.CallClass, this.Query.CallMethod, this.Query);
+                XML result = new Router().Call(
+                    typeof(Controller).Namespace,
+                    this.Query.CallClass,
+                    this.Query.CallMethod,
+                    this.Query
+                );
 
-                if (result == null) Main.Abort("Не найден \""+ this.Query.CallClass + "." + this.Query.CallMethod +"\"!");
+                if (result == null) result = new XML();
 
-                return result;
+                return new Response(result.name("success"));
 
             }
             catch (ExceptionAbort ex)

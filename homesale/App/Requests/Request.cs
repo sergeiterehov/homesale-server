@@ -8,5 +8,8 @@ namespace homesale.App.Requests
 {
     class Request<T> : Libs.Base.Request<T> where T : Libs.Base.Request<T>, new()
     {
+
     }
+
+    class Option : Libs.Base.RequestAttributes.Option { }
 }
